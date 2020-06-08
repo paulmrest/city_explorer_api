@@ -27,3 +27,26 @@ function Location(searchQuery, object) {
   this.latitude = object.lat;
   this.longitude = object.lon;
 }
+
+app.get('/weather', (request, response) => {
+  let search_query = request.query.city;
+  let weatherData = require('./data/weather.json');
+  let weatherArray = new Array();
+  weatherData.data.forEach(oneWeatherDay => {
+    //START-CONSOLE-TESTING
+    // console.log(`oneWeatherDay.data: ${oneWeatherDay}`);
+    //END-CONSOLE-TESTING
+
+    weatherArray.push(new WeatherDay(search_query, oneWeatherDay));
+  })
+  //START-CONSOLE-TESTING
+  console.log(`weatherArray: ${weatherArray}`);
+  //END-CONSOLE-TESTING
+  response.status(200).send(weatherArray);
+})
+
+function WeatherDay(searchQuery, object) {
+  this.search_query = searchQuery;
+  this.forecast = object.weather.description;
+  this.time = object.datetime;
+}
