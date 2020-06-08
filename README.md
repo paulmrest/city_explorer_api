@@ -31,9 +31,9 @@ An API for plugging into https://codefellows.github.io/code-301-guide/curriculum
 
 Number and name of feature: Feature 01 - Location Data
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: 1 hour
 
-Start time: _____
+Start time: 3:00 PM PDT
 
 Finish time: _____
 
