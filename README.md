@@ -35,29 +35,29 @@ Estimate of time needed to complete: 1 hour
 
 Start time: 3:00 PM PDT
 
-Finish time: _____
+Finish time: 4:00 PM PDT
 
-Actual time needed to complete: _____
+Actual time needed to complete: 1 hour
 
 ***
 
 Number and name of feature: Feature 02 - Weather Data
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: 30 minutes
 
-Start time: _____
+Start time: 4:00 PM PDT
 
-Finish time: _____
+Finish time: 5:00 PM PDT
 
-Actual time needed to complete: _____
+Actual time needed to complete: 1 hour
 
 ***
 
 Number and name of feature: Feature 03 - Error Handling
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: 30 minutes
 
-Start time: _____
+Start time: 5:00 PM PDT
 
 Finish time: _____
 
