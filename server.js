@@ -62,6 +62,6 @@ function WeatherDay(searchQuery, object) {
 }
 
 //error function
-app.get('/', (request, response) => {
-  throw new Error('Unknown API call.');
+app.get('*', (request, response) => {
+  response.status(404).send('Unknown API call.');
 })
