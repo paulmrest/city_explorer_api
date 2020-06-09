@@ -4,7 +4,7 @@
 **Version**: 1.0.0
 
 ## Overview
-An API for plugging into https://codefellows.github.io/code-301-guide/curriculum/city-explorer-app/front-end/.
+An API that returns location and weather data at the `/location` and `/weather` paths.
 
 ## Getting Started
 1. Clone Git repository to your local machine
@@ -17,19 +17,33 @@ An API for plugging into https://codefellows.github.io/code-301-guide/curriculum
 1. Plug deployed URL into City Explorer front-end app
 
 ## Architecture
-
+Built using Node.js, and the Node libraries:
+*express
+*dotenv
+*cors
 
 ## Change Log
-<!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:
-
-01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource.
+2020-06-08 5:45 PM PDT: API now capable of returning basic location and weather data from static JSON files. Also throws an error when
+attempting to access an API path that doesn't exist.
 
 ## Credits and Collaborations
-<!-- Give credit (and a link) to other people or resources that helped you build this application. -->
+
 
 ## Time Estimates and Actuals
 
-Number and name of feature: Feature 01 - Location Data
+Number and name of feature: Feature 01 - Set Up Repo
+
+Estimate of time needed to complete: 30 minutes
+
+Start time: 2:15
+
+Finish time: 3:00 PM PDT
+
+Actual time needed to complete: 45 minutes
+
+***
+
+Number and name of feature: Feature 02 - Location Data
 
 Estimate of time needed to complete: 1 hour
 
@@ -41,7 +55,7 @@ Actual time needed to complete: 1 hour
 
 ***
 
-Number and name of feature: Feature 02 - Weather Data
+Number and name of feature: Feature 03 - Weather Data
 
 Estimate of time needed to complete: 30 minutes
 
@@ -53,12 +67,12 @@ Actual time needed to complete: 1 hour
 
 ***
 
-Number and name of feature: Feature 03 - Error Handling
+Number and name of feature: Feature 05 - Error Handling
 
 Estimate of time needed to complete: 30 minutes
 
 Start time: 5:00 PM PDT
 
-Finish time: _____
+Finish time: 5:35 PM PDT
 
-Actual time needed to complete: _____
+Actual time needed to complete: 35 minutes
