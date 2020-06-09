@@ -31,6 +31,8 @@ attempting to access an API path that doesn't exist.
 
 ## Time Estimates and Actuals
 
+### Lab-06
+
 Number and name of feature: Feature 01 - Set Up Repo
 
 Estimate of time needed to complete: 30 minutes
@@ -76,3 +78,27 @@ Start time: 5:00 PM PDT
 Finish time: 5:35 PM PDT
 
 Actual time needed to complete: 35 minutes
+
+### Lab-07
+
+Number and name of feature: Feature 01 - Data Formatting (Refactor to Use Array.Map)
+
+Estimate of time needed to complete: 15 minutes
+
+Start time: 2:30 PM PDT
+
+Finish time: 3:20 PM PDT
+
+Actual time needed to complete: 15 minutes - spent time reviewing code and helping others at my tale with theirs
+
+***
+
+Number and name of feature: Feature 02 - Get Location Data from LocationIQ API
+
+Estimate of time needed to complete: _____
+
+Start time: _____
+
+Finish time: _____
+
+Actual time needed to complete: _____
