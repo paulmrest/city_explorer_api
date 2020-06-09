@@ -2,6 +2,7 @@
 
 const express = require('express');
 const app = express();
+const superagent = require('superagent');
 
 require('dotenv').config();
 
@@ -18,9 +19,18 @@ app.get('/location', (request, response) => {
   try
   {
     let search_query = request.query.city;
-    let geoData = require('./data/location.json');
-    let returnObject = new Location(search_query, geoData[0]);
-    response.status(200).send(returnObject);
+
+    let locationURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${search_query}&format=json`;
+    superagent.get(locationURL)
+      .then(locationWebResults => {
+        response.status(200).send(
+          new Location(search_query, locationWebResults.body[0])
+        );
+      });
+
+    // let geoData = require('./data/location.json');
+    // let returnObject = new Location(search_query, geoData[0]);
+    // response.status(200).send(returnObject);
   }
   catch (error)
   {
@@ -41,10 +51,9 @@ app.get('/weather', (request, response) => {
   {
     let search_query = request.query.city;
     let weatherData = require('./data/weather.json');
-    let weatherArray = new Array();
-    weatherData.data.forEach(oneWeatherDay => {
-      weatherArray.push(new WeatherDay(search_query, oneWeatherDay));
-    })
+    let weatherArray = weatherData.data.map(oneWeatherDay => {
+      return new WeatherDay(search_query, oneWeatherDay);
+    });
     response.status(200).send(weatherArray);
   }
   catch (error)
@@ -52,7 +61,6 @@ app.get('/weather', (request, response) => {
     console.log('Error:', error);
     response.status(500).send('Error getting weather.');
   }
-
 })
 
 function WeatherDay(searchQuery, object) {
