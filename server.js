@@ -16,28 +16,35 @@ app.listen(PORT, () => {
 })
 
 app.get('/location', (request, response) => {
-  try
-  {
-    let search_query = request.query.city;
-
-    let locationURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${search_query}&format=json`;
-    superagent.get(locationURL)
-      .then(locationWebResults => {
-        response.status(200).send(
-          new Location(search_query, locationWebResults.body[0])
-        );
-      });
-
-    // let geoData = require('./data/location.json');
-    // let returnObject = new Location(search_query, geoData[0]);
-    // response.status(200).send(returnObject);
-  }
-  catch (error)
-  {
-    console.log('Error:', error);
-    response.status(500).send('Error getting location.');
-  }
+  let search_query = request.query.city;
+  let locationURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${search_query}&format=json`;
+  superagent.get(locationURL)
+    .then(locationWebResults => {
+      response.status(200).send(
+        new Location(search_query, locationWebResults.body[0])
+      );
+    });
 })
+
+// app.get('/location', (request, response) => {
+//   try
+//   {
+//     let search_query = request.query.city;
+
+//     let locationURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${search_query}&format=json`;
+//     superagent.get(locationURL)
+//       .then(locationWebResults => {
+//         response.status(200).send(
+//           new Location(search_query, locationWebResults.body[0])
+//         );
+//       });
+//   }
+//   catch (error)
+//   {
+//     console.log('Error:', error);
+//     response.status(500).send('Error getting location.');
+//   }
+// })
 
 function Location(searchQuery, object) {
   this.search_query = searchQuery;
