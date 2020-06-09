@@ -15,10 +15,18 @@ app.listen(PORT, () => {
 })
 
 app.get('/location', (request, response) => {
-  let search_query = request.query.city;
-  let geoData = require('./data/location.json');
-  let returnObject = new Location(search_query, geoData[0]);
-  response.status(200).send(returnObject);
+  try
+  {
+    let search_query = request.query.city;
+    let geoData = require('./data/location.json');
+    let returnObject = new Location(search_query, geoData[0]);
+    response.status(200).send(returnObject);
+  }
+  catch (error)
+  {
+    console.log('Error:', error);
+    response.status(500).send('Error getting location.');
+  }
 })
 
 function Location(searchQuery, object) {
@@ -29,20 +37,22 @@ function Location(searchQuery, object) {
 }
 
 app.get('/weather', (request, response) => {
-  let search_query = request.query.city;
-  let weatherData = require('./data/weather.json');
-  let weatherArray = new Array();
-  weatherData.data.forEach(oneWeatherDay => {
-    //START-CONSOLE-TESTING
-    // console.log(`oneWeatherDay.data: ${oneWeatherDay}`);
-    //END-CONSOLE-TESTING
+  try
+  {
+    let search_query = request.query.city;
+    let weatherData = require('./data/weather.json');
+    let weatherArray = new Array();
+    weatherData.data.forEach(oneWeatherDay => {
+      weatherArray.push(new WeatherDay(search_query, oneWeatherDay));
+    })
+    response.status(200).send(weatherArray);
+  }
+  catch (error)
+  {
+    console.log('Error:', error);
+    response.status(500).send('Error getting weather.');
+  }
 
-    weatherArray.push(new WeatherDay(search_query, oneWeatherDay));
-  })
-  //START-CONSOLE-TESTING
-  console.log(`weatherArray: ${weatherArray}`);
-  //END-CONSOLE-TESTING
-  response.status(200).send(weatherArray);
 })
 
 function WeatherDay(searchQuery, object) {
@@ -50,3 +60,8 @@ function WeatherDay(searchQuery, object) {
   this.forecast = object.weather.description;
   this.time = object.datetime;
 }
+
+//error function
+app.get('*', (request, response) => {
+  response.status(404).send('Unknown API call.');
+})
