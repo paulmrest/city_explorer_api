@@ -33,6 +33,8 @@ attempting to access an API path that doesn't exist.
 
 ### Lab-06
 
+![Lab 06 - Whiteboard](images/Lab06-Whiteboard.jpeg)
+
 Number and name of feature: Feature 01 - Set Up Repo
 
 Estimate of time needed to complete: 30 minutes
@@ -81,6 +83,8 @@ Actual time needed to complete: 35 minutes
 
 ### Lab-07
 
+![Lab 07 - Whiteboard](images/Lab07-Whiteboard.jpeg)
+
 Number and name of feature: Feature 01 - Data Formatting (Refactor to Use Array.Map)
 
 Estimate of time needed to complete: 15 minutes
@@ -111,6 +115,18 @@ Estimate of time needed to complete: 1 hour
 
 Start time: 5:37 PM PDT
 
-Finish time: _____
+Finish time: 9:02 PM PDT
 
-Actual time needed to complete: _____
+Actual time needed to complete: about 1 hour. Spent a bunch of time helping others, then took a break to eat food and not program.
+
+***
+
+Number and name of feature: Feature 04 - Hiking and Campgrounds
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 9:05 PM PDT
+
+Finish time: 10:29 PM PDT
+
+Actual time needed to complete: 1 hour 25 minutes - there was a mismatch between the date-time format the front-end is looking for and the data from the API, so I ended up writing two custom functions to reformat the data.
