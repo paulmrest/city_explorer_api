@@ -37,26 +37,6 @@ app.get('/location', (request, response) => {
   }
 })
 
-// app.get('/location', (request, response) => {
-//   try
-//   {
-//     let search_query = request.query.city;
-
-//     let locationURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${search_query}&format=json`;
-//     superagent.get(locationURL)
-//       .then(locationWebResults => {
-//         response.status(200).send(
-//           new Location(search_query, locationWebResults.body[0])
-//         );
-//       });
-//   }
-//   catch (error)
-//   {
-//     console.log('Error:', error);
-//     response.status(500).send('Error getting location.');
-//   }
-// })
-
 function Location(searchQuery, object) {
   this.search_query = searchQuery;
   this.formatted_query = object.display_name;
