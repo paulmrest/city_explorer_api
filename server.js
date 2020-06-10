@@ -16,21 +16,25 @@ app.listen(PORT, () => {
 })
 
 app.get('/location', (request, response) => {
-  let search_query = request.query.city;
-  let locationURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${search_query}&format=json`;
-  superagent.get(locationURL)
-    .then(locationWebResults => {
-      // console.log('locationWebResults.body:');
-      // console.log(locationWebResults.body);
-      let locationFromQuery = new Location(search_query, locationWebResults.body[0]);
-      // console.log('locationFromQuery');
-      // console.log(locationFromQuery);
-      response.status(200).send(locationFromQuery);
-    })
-    .catch(error => {
-      console.log('Error:', error);
-      response.status(500).send('Error getting location.');
-    });
+  try
+  {
+    let search_query = request.query.city;
+    let locationURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${search_query}&format=json`;
+    superagent.get(locationURL)
+      .then(locationWebResults => {
+        let locationFromQuery = new Location(search_query, locationWebResults.body[0]);
+        response.status(200).send(locationFromQuery);
+      })
+      .catch(error => {
+        console.log('Error:', error);
+        response.status(500).send('Error getting superagent data.');
+      });
+  }
+  catch (error)
+  {
+    console.log('Error:', error);
+    response.status(500).send('Error getting location.');
+  }
 })
 
 // app.get('/location', (request, response) => {
