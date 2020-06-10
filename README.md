@@ -130,3 +130,15 @@ Start time: 9:05 PM PDT
 Finish time: 10:29 PM PDT
 
 Actual time needed to complete: 1 hour 25 minutes - there was a mismatch between the date-time format the front-end is looking for and the data from the API, so I ended up writing two custom functions to reformat the data.
+
+### Lab-08
+
+Number and name of feature: Feature 01 - Set up DB, Connection, and Schema
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 4:00 PM PDT
+
+Finish time: 
+
+Actual time needed to complete: _____
