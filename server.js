@@ -11,10 +11,7 @@ app.use(cors());
 
 const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`);
-})
-
+//API paths
 app.get('/location', (request, response) => {
   try
   {
@@ -83,12 +80,17 @@ app.get('/trails', (request, response) => {
   }
 })
 
-//error function
+//error handling
 app.get('*', (request, response) => {
   response.status(404).send('Unknown API call.');
 })
 
+//turn on server
+app.listen(PORT, () => {
+  console.log(`Listening on ${PORT}`);
+})
 
+//constructors
 function Location(searchQuery, object) {
   this.search_query = searchQuery;
   this.formatted_query = object.display_name;
@@ -112,25 +114,8 @@ function TrailOrCampground(searchQuery, object) {
   this.summary = object.summary;
   this.trail_url = object.url;
   this.conditions = object.conditionDetails;
-  const conditionDateTime = new Date(object.conditionDate);
-  this.condition_date = yearMonthDayString(conditionDateTime);
-  this.condition_time = twelveHourTimeString(conditionDateTime);
+  //assuming that the conditionDate property is a string of the format
+  //'YYYY-MM-DD HH-MM-SS'
+  this.condition_date = object.conditionDate.split(' ')[0];
+  this.condition_time = object.conditionDate.split(' ')[1];
 }
-
-const yearMonthDayString = (date) => {
-  const monthInt = date.getMonth() + 1;
-  const monthString = monthInt >= 10 ? `${monthInt}` : `0${monthInt}`;
-  const dayInt = date.getDate();
-  const dayString = dayInt >= 10 ? `${dayInt}` : `0${dayInt}`;
-  return `${date.getFullYear()}-${monthString}-${dayString}`;
-};
-
-const twelveHourTimeString = (date) => {
-  const hourInt = date.getHours();
-  const hourString = hourInt >= 10 ? `${hourInt}` : `0${hourInt}`;
-  const minuteInt = date.getMinutes();
-  const minuteString = minuteInt >= 10 ? `${minuteInt}` : `0${minuteInt}`;
-  const secondInt = date.getSeconds();
-  const secondString = secondInt >= 10 ? `${secondInt}` : `0${secondInt}`;
-  return `${hourString}:${minuteString}:${secondString}`;
-};
