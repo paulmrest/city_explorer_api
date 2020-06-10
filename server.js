@@ -20,9 +20,14 @@ app.get('/location', (request, response) => {
   let locationURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${search_query}&format=json`;
   superagent.get(locationURL)
     .then(locationWebResults => {
-      response.status(200).send(
-        new Location(search_query, locationWebResults.body[0])
-      );
+      // console.log(locationWebResults.body);
+      let locationFromQuery = new Location(search_query, locationWebResults.body[0]);
+      // console.log(locationFromQuery);
+      response.status(200).send(locationFromQuery);
+    })
+    .catch(error => {
+      console.log('Error:', error);
+      response.status(500).send('Error getting location.');
     });
 })
 
