@@ -3,11 +3,15 @@
 const express = require('express');
 const app = express();
 const superagent = require('superagent');
+const pg = require('pg');
 
 require('dotenv').config();
 
 const cors = require('cors');
 app.use(cors());
+
+const client = new pg.Client(process.env.DATABASE_URL);
+client.on('error', error => console.error(error));
 
 const PORT = process.env.PORT || 3001;
 
@@ -86,9 +90,12 @@ app.get('*', (request, response) => {
 })
 
 //turn on server
-app.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`);
-})
+client.connect()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Listening on ${PORT}`);
+    })
+  })
 
 //constructors
 function Location(searchQuery, object) {
