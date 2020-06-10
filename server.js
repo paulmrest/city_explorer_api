@@ -20,8 +20,10 @@ app.get('/location', (request, response) => {
   let locationURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${search_query}&format=json`;
   superagent.get(locationURL)
     .then(locationWebResults => {
+      // console.log('locationWebResults.body:');
       // console.log(locationWebResults.body);
       let locationFromQuery = new Location(search_query, locationWebResults.body[0]);
+      // console.log('locationFromQuery');
       // console.log(locationFromQuery);
       response.status(200).send(locationFromQuery);
     })
