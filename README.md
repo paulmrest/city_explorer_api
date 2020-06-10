@@ -105,11 +105,11 @@ Actual time needed to complete: 1.5 hours? Ran into weird issues with Heroku and
 
 ***
 
-Number and name of feature: ________________________________
+Number and name of feature: Feature 03 - Weather from WeatherBit API
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: 1 hour
 
-Start time: _____
+Start time: 5:37 PM PDT
 
 Finish time: _____
 

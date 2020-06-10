@@ -27,7 +27,7 @@ app.get('/location', (request, response) => {
       })
       .catch(error => {
         console.log('Error:', error);
-        response.status(500).send('Error getting superagent data.');
+        response.status(500).send('Error getting superagent location data.');
       });
   }
   catch (error)
@@ -47,12 +47,19 @@ function Location(searchQuery, object) {
 app.get('/weather', (request, response) => {
   try
   {
-    let search_query = request.query.city;
-    let weatherData = require('./data/weather.json');
-    let weatherArray = weatherData.data.map(oneWeatherDay => {
-      return new WeatherDay(search_query, oneWeatherDay);
-    });
-    response.status(200).send(weatherArray);
+    let search_query = request.query.search_query;
+    let weatherURL = `https://api.weatherbit.io/v2.0/forecast/daily?city=${search_query}&key=${process.env.WEATHER_API_KEY}`;
+    superagent.get(weatherURL)
+      .then(locationWeatherResults => {
+        let locationWeatherFromQuery = locationWeatherResults.body.data.map(oneWeatherDay => {
+          return new WeatherDay(search_query, oneWeatherDay);
+        });
+        response.status(200).send(locationWeatherFromQuery);
+      })
+      .catch(error => {
+        console.log('Error:', error);
+        response.status(500).send('Error getting superagent weather data.');
+      });
   }
   catch (error)
   {
