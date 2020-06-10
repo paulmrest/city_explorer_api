@@ -95,6 +95,18 @@ Actual time needed to complete: 15 minutes - spent time reviewing code and helpi
 
 Number and name of feature: Feature 02 - Get Location Data from LocationIQ API
 
+Estimate of time needed to complete: 1 hour
+
+Start time: 3:20 PM PDT
+
+Finish time: 5:34 PM PDT
+
+Actual time needed to complete: 1.5 hours? Ran into weird issues with Heroku and was also helping other students
+
+***
+
+Number and name of feature: ________________________________
+
 Estimate of time needed to complete: _____
 
 Start time: _____
