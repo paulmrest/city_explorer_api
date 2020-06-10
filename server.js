@@ -48,7 +48,7 @@ app.get('/weather', (request, response) => {
   try
   {
     let search_query = request.query.search_query;
-    let weatherURL = `https://api.weatherbit.io/v2.0/forecast/daily?city=${search_query}&key=${process.env.WEATHER_API_KEY}`;
+    let weatherURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${request.query.latitude}&lon=${request.query.longitude}&key=${process.env.WEATHER_API_KEY}`;
     superagent.get(weatherURL)
       .then(locationWeatherResults => {
         let locationWeatherFromQuery = locationWeatherResults.body.data.map(oneWeatherDay => {
