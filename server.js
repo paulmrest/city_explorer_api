@@ -17,15 +17,11 @@ const PORT = process.env.PORT || 3001;
 
 //API paths
 app.get('/location', (request, response) => {
-  try
-  {
-    getLocationData(request, response);
-  }
-  catch (error)
-  {
-    console.log('Error:', error);
-    response.status(500).send('Error getting location.');
-  }
+  //START-CONSOLE-TESTING
+  console.log('API get /location:');
+  console.log(request.query);
+  //END-CONSOLE-TESTING
+  getLocationData(request, response);
 })
 
 app.get('/weather', (request, response) => {
@@ -89,7 +85,7 @@ client.connect()
 
 //database caching
 const getLocationData = (request, response) => {
-  const sqlSelectQuery = 'SELECT "search_query", "formatted_query", "latitude", "longitude" FROM "locations" WHERE "locations"."search_query" = $1;'
+  const sqlSelectQuery = 'SELECT "search_query", "display_name", "lat", "lon" FROM "locations" WHERE "locations"."search_query" = ($1);'
   const safeSelectValues = [request.query.city];
   client.query(sqlSelectQuery, safeSelectValues)
     .then((result) => {
@@ -114,11 +110,19 @@ const fetchDataFromAPI = (request, response) => {
   let locationURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${search_query}&format=json`;
   superagent.get(locationURL)
     .then(locationWebResults => {
+      //START-CONSOLE-TESTING
+      console.log('locationWebResults.body[0]:');
+      console.log(locationWebResults.body[0]);
+      //END-CONSOLE-TESTING
       const locationObjectFromAPI = new Location(search_query, locationWebResults.body[0]);
-      const sqlInsertQuery = 'INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4)';
+      const sqlInsertQuery = 'INSERT INTO locations (search_query, display_name, lat, lon) VALUES ($1, $2, $3, $4)';
       const safeInsertValues = [locationObjectFromAPI.search_query, locationObjectFromAPI.formatted_query, locationObjectFromAPI.latitude, locationObjectFromAPI.longitude];
       client.query(sqlInsertQuery, safeInsertValues)
         .then(() => {
+          //START-CONSOLE-TESTING
+          console.log('location object from API:');
+          console.log(locationObjectFromAPI);
+          //END-CONSOLE-TESTING
           response.status(200).send(locationObjectFromAPI);
         })
     })
@@ -129,13 +133,13 @@ const fetchDataFromAPI = (request, response) => {
 }
 
 const handleDataFromCache = (cacheData, response) => {
-  const locationObjectFromCache = new Location(cacheData.search_query, 
-    {
-      display_name: cacheData.formatted_query,
-      lat: cacheData.latitude,
-      lon: cacheData.longitude
-    }
-  );
+  const locationObjectFromCache = new Location(cacheData.search_query, cacheData);
+  //START-CONSOLE-TESTING
+  console.log('cacheData:');
+  console.log(cacheData);
+  console.log('locationObjectFromCache:');
+  console.log(locationObjectFromCache);
+  //END-CONSOLE-TESTING
   response.status(200).send(locationObjectFromCache);
 }
 
