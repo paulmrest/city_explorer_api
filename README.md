@@ -163,9 +163,9 @@ Estimate of time needed to complete: 30 minutes
 
 Start time: 7:20 PM PDT
 
-Finish time: 
+Finish time: 7:38 PM PDT
 
-Actual time needed to complete: _____
+Actual time needed to complete: 18 minutes
 
 ***
 
