@@ -28,51 +28,51 @@ app.get('/location', (request, response) => {
   }
 })
 
-// app.get('/weather', (request, response) => {
-//   try
-//   {
-//     let weatherURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${request.query.latitude}&lon=${request.query.longitude}&key=${process.env.WEATHER_API_KEY}`;
-//     superagent.get(weatherURL)
-//       .then(locationWeatherResults => {
-//         let locationWeatherFromQuery = locationWeatherResults.body.data.map(oneWeatherDay => {
-//           return new WeatherDay(request.query.search_query, oneWeatherDay);
-//         });
-//         response.status(200).send(locationWeatherFromQuery);
-//       })
-//       .catch(error => {
-//         console.log('Error:', error);
-//         response.status(500).send('Error getting superagent weather data.');
-//       });
-//   }
-//   catch (error)
-//   {
-//     console.log('Error:', error);
-//     response.status(500).send('Error getting weather.');
-//   }
-// })
+app.get('/weather', (request, response) => {
+  try
+  {
+    let weatherURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${request.query.latitude}&lon=${request.query.longitude}&key=${process.env.WEATHER_API_KEY}`;
+    superagent.get(weatherURL)
+      .then(locationWeatherResults => {
+        let locationWeatherFromQuery = locationWeatherResults.body.data.map(oneWeatherDay => {
+          return new WeatherDay(request.query.search_query, oneWeatherDay);
+        });
+        response.status(200).send(locationWeatherFromQuery);
+      })
+      .catch(error => {
+        console.log('Error:', error);
+        response.status(500).send('Error getting superagent weather data.');
+      });
+  }
+  catch (error)
+  {
+    console.log('Error:', error);
+    response.status(500).send('Error getting weather.');
+  }
+})
 
-// app.get('/trails', (request, response) => {
-//   try
-//   {
-//     let trailsURL = `https://www.hikingproject.com/data/get-trails?lat=${request.query.latitude}&lon=${request.query.longitude}&key=${process.env.TRAIL_API_KEY}`;
-//     superagent.get(trailsURL)
-//       .then(locationTrailsResults => {
-//         let locationTrailsFromQuery = locationTrailsResults.body.trails.map(oneTrailOrCampground => {
-//           return new TrailOrCampground(request.query.search_query, oneTrailOrCampground);
-//         });
-//         response.status(200).send(locationTrailsFromQuery);
-//       })
-//       .catch(error => {
-//         console.log('Error:', error);
-//         response.status(500).send('Error getting superagent trail data.');
-//       });
-//   }
-//   catch (error)
-//   {
-//     console.log('Error:', error);
-//     response.status(500).send('Error getting trails.');
-//   }
-// })
+app.get('/trails', (request, response) => {
+  try
+  {
+    let trailsURL = `https://www.hikingproject.com/data/get-trails?lat=${request.query.latitude}&lon=${request.query.longitude}&key=${process.env.TRAIL_API_KEY}`;
+    superagent.get(trailsURL)
+      .then(locationTrailsResults => {
+        let locationTrailsFromQuery = locationTrailsResults.body.trails.map(oneTrailOrCampground => {
+          return new TrailOrCampground(request.query.search_query, oneTrailOrCampground);
+        });
+        response.status(200).send(locationTrailsFromQuery);
+      })
+      .catch(error => {
+        console.log('Error:', error);
+        response.status(500).send('Error getting superagent trail data.');
+      });
+  }
+  catch (error)
+  {
+    console.log('Error:', error);
+    response.status(500).send('Error getting trails.');
+  }
+})
 
 //error handling
 app.get('*', (request, response) => {
