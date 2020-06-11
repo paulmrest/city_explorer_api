@@ -139,6 +139,30 @@ Estimate of time needed to complete: 1 hour
 
 Start time: 4:00 PM PDT
 
-Finish time: 
+Finish time: 4:40 PM PDT
+
+Actual time needed to complete: 40 minutes
+
+***
+
+Number and name of feature: Feature 02 - Cache API Info in DB
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 4:56 PM PDT
+
+Finish time: _____
+
+Actual time needed to complete: _____
+
+***
+
+Number and name of feature: ________________________________
+
+Estimate of time needed to complete: _____
+
+Start time: _____
+
+Finish time: _____
 
 Actual time needed to complete: _____
