@@ -89,11 +89,6 @@ client.connect()
 
 //database caching
 const getLocationData = (request, response) => {
-  //START-CONSOLE-TESTING
-  console.log('getLocationData');
-  console.log('request.query:');
-  console.log(request.query);
-  //END-CONSOLE-TESTING
   const sqlSelectQuery = 'SELECT "search_query", "formatted_query", "latitude", "longitude" FROM "locations" WHERE "locations"."search_query" = $1;'
   const safeSelectValues = [request.query.city];
   client.query(sqlSelectQuery, safeSelectValues)
@@ -115,9 +110,6 @@ const getLocationData = (request, response) => {
 };
 
 const fetchDataFromAPI = (request, response) => {
-  //START-CONSOLE-TESTING
-  console.log('fetchDataFromAPI');
-  //END-CONSOLE-TESTING
   let search_query = request.query.city;
   let locationURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${search_query}&format=json`;
   superagent.get(locationURL)
@@ -137,9 +129,6 @@ const fetchDataFromAPI = (request, response) => {
 }
 
 const handleDataFromCache = (cacheData, response) => {
-  //START-CONSOLE-TESTING
-  console.log('handleDataFromCache');
-  //END-CONSOLE-TESTING
   const locationObjectFromCache = new Location(cacheData.search_query, 
     {
       display_name: cacheData.formatted_query,
@@ -174,8 +163,8 @@ function TrailOrCampground(searchQuery, object) {
   this.summary = object.summary;
   this.trail_url = object.url;
   this.conditions = object.conditionDetails;
-  //assuming that the conditionDate property is a string of the format
-  //'YYYY-MM-DD HH-MM-SS'
+  //We are assuming that the conditionDate property is a string
+  //of the format 'YYYY-MM-DD HH-MM-SS'
   this.condition_date = object.conditionDate.split(' ')[0];
   this.condition_time = object.conditionDate.split(' ')[1];
 }
