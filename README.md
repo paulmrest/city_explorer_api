@@ -151,7 +151,19 @@ Estimate of time needed to complete: 1 hour
 
 Start time: 4:56 PM PDT
 
-Finish time: _____
+Finish time: 7:12 PM PDT
+
+Actual time needed to complete: 2 hours and 16 minutes
+
+***
+
+Number and name of feature: Feature 03 - Deploy DB to Heroku
+
+Estimate of time needed to complete: 30 minutes
+
+Start time: 7:20 PM PDT
+
+Finish time: 
 
 Actual time needed to complete: _____
 
