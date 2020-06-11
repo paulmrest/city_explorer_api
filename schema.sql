@@ -8,6 +8,12 @@ create table locations (
   "longitude" varchar(255)
 );
 
+-- function Location(searchQuery, object) {
+--   this.search_query = searchQuery;
+--   this.formatted_query = object.display_name;
+--   this.latitude = object.lat;
+--   this.longitude = object.lon;
+-- }
 
 drop table if exists weather;
 
