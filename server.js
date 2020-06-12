@@ -25,49 +25,27 @@ app.get('/location', (request, response) => {
 })
 
 app.get('/weather', (request, response) => {
-  try
-  {
-    let weatherURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${request.query.latitude}&lon=${request.query.longitude}&key=${process.env.WEATHER_API_KEY}`;
-    superagent.get(weatherURL)
-      .then(locationWeatherResults => {
-        let locationWeatherFromQuery = locationWeatherResults.body.data.map(oneWeatherDay => {
-          return new WeatherDay(request.query.search_query, oneWeatherDay);
-        });
-        response.status(200).send(locationWeatherFromQuery);
-      })
-      .catch(error => {
-        console.log('Error:', error);
-        response.status(500).send('Error getting superagent weather data.');
-      });
-  }
-  catch (error)
-  {
-    console.log('Error:', error);
-    response.status(500).send('Error getting weather.');
-  }
+  //START-CONSOLE-TESTING
+  console.log('API get /weather');
+  console.log(request.query);
+  //END-CONSOLE-TESTING
+  getWeatherData(request, response);
 })
 
 app.get('/trails', (request, response) => {
-  try
-  {
-    let trailsURL = `https://www.hikingproject.com/data/get-trails?lat=${request.query.latitude}&lon=${request.query.longitude}&key=${process.env.TRAIL_API_KEY}`;
-    superagent.get(trailsURL)
-      .then(locationTrailsResults => {
-        let locationTrailsFromQuery = locationTrailsResults.body.trails.map(oneTrailOrCampground => {
-          return new TrailOrCampground(request.query.search_query, oneTrailOrCampground);
-        });
-        response.status(200).send(locationTrailsFromQuery);
-      })
-      .catch(error => {
-        console.log('Error:', error);
-        response.status(500).send('Error getting superagent trail data.');
-      });
-  }
-  catch (error)
-  {
-    console.log('Error:', error);
-    response.status(500).send('Error getting trails.');
-  }
+  //START-CONSOLE-TESTING
+  console.log('API get /trails');
+  console.log(request.query);
+  //END-CONSOLE-TESTING
+  getTrailAndCampgroundData(request, response);
+})
+
+app.get('/movies', (request, response) => {
+  //START-CONSOLE-TESTING
+  console.log('API get /movies');
+  console.log(request.query);
+  //END-CONSOLE-TESTING
+  getMovieData(request, response);
 })
 
 //error handling
@@ -83,19 +61,23 @@ client.connect()
     })
   })
 
-//database caching
+//location getting and setting in DB
 const getLocationData = (request, response) => {
+  const search_query = request.query.city;
+  //SQL query and safe values for sanitization using pg library
   const sqlSelectQuery = 'SELECT "search_query", "display_name", "lat", "lon" FROM "locations" WHERE "locations"."search_query" = ($1);'
-  const safeSelectValues = [request.query.city];
+  const safeSelectValues = [search_query];
+  //get data from SQL DB using pg
   client.query(sqlSelectQuery, safeSelectValues)
     .then((result) => {
+      //if data not already in DB, get data from API and write to DB
       if (result.rows.length === 0)
       {
-        fetchDataFromAPI(request, response);
+        fetchDataFromAPI(search_query, response);
       }
-      else
+      //else use data from DB
       {
-        handleDataFromCache(result.rows[0], response);
+        handleDataFromCache(search_query, result.rows[0], response);
       }
     })
     .catch((error) =>
@@ -103,12 +85,18 @@ const getLocationData = (request, response) => {
       console.error('Error retreiving location data from cache.');
       console.error(error);
     });
-};
+}
 
-const fetchDataFromAPI = (request, response) => {
-  let search_query = request.query.city;
-  let locationURL = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${search_query}&format=json`;
+const fetchDataFromAPI = (search_query, response) => {
+  let locationURL = 'https://us1.locationiq.com/v1/search.php';
+  const locationAPIQueryParms = {
+    key: process.env.GEOCODE_API_KEY,
+    q: search_query,
+    format: 'json',
+    limit: 1
+  };
   superagent.get(locationURL)
+    .query(locationAPIQueryParms)
     .then(locationWebResults => {
       //START-CONSOLE-TESTING
       console.log('locationWebResults.body[0]:');
@@ -127,12 +115,12 @@ const fetchDataFromAPI = (request, response) => {
         })
     })
     .catch(error => {
-      console.error('Error fetching location data from API.');
+      console.error('Error fetching location data from location API.');
       console.error(error);
     });
 }
 
-const handleDataFromCache = (cacheData, response) => {
+const handleDataFromCache = (search_query, cacheData, response) => {
   const locationObjectFromCache = new Location(cacheData.search_query, cacheData);
   //START-CONSOLE-TESTING
   console.log('cacheData:');
@@ -141,6 +129,100 @@ const handleDataFromCache = (cacheData, response) => {
   console.log(locationObjectFromCache);
   //END-CONSOLE-TESTING
   response.status(200).send(locationObjectFromCache);
+}
+
+//weather getting
+const getWeatherData = (request, response) => {
+  //API URL and query object
+  let weatherURL = 'https://api.weatherbit.io/v2.0/forecast/daily';
+  const weatherAPIQueryParams = {
+    lat: request.query.latitude,
+    lon: request.query.longitude,
+    key: process.env.WEATHER_API_KEY
+  };
+  //call to SuperAgent library for data from API
+  superagent.get(weatherURL)
+    .query(weatherAPIQueryParams)
+    .then(locationWeatherResults => {
+      let locationWeatherFromQuery = locationWeatherResults.body.data.map(oneWeatherDay => {
+        return new WeatherDay(request.query.search_query, oneWeatherDay);
+      });
+      response.status(200).send(locationWeatherFromQuery);
+    })
+    .catch(error => {
+      console.log('Error:', error);
+      response.status(500).send('Error getting superagent weather data.');
+    });
+}
+
+//trail and campground getting
+const getTrailAndCampgroundData = (request, response) => {
+  //trail and campground API URL and query object
+  let trailsURL = 'https://www.hikingproject.com/data/get-trails';
+  const trailAndCampgroundQueryParams = {
+    lat: request.query.latitude,
+    lon: request.query.longitude,
+    key: process.env.TRAIL_API_KEY
+  };
+  //call to SuperAgent library for data from API
+  superagent.get(trailsURL)
+    .query(trailAndCampgroundQueryParams)
+    .then(locationTrailsResults => {
+      let locationTrailsFromQuery = locationTrailsResults.body.trails.map(oneTrailOrCampground => {
+        return new TrailOrCampground(request.query.search_query, oneTrailOrCampground);
+      });
+      response.status(200).send(locationTrailsFromQuery);
+    })
+    .catch(error => {
+      console.log('Error:', error);
+      response.status(500).send('Error getting superagent trail data.');
+    });
+}
+
+//get movie data
+const getMovieData = (request, response) => {
+  const search_query = request.query.search_query;
+  //START-CONSOLE-TESTING
+  // console.log('getMovieData');
+  // console.log('request.query:');
+  // console.log(request.query);
+  // console.log('request.query.search_query:');
+  // console.log(request.query.search_query);
+  //END-CONSOLE-TESTING
+
+  // let moviesURL = 'https://api.themoviedb.org/3/search/movie?api_key=ea13133c930fcaaf870867acf38f063f&language=en-US&query=seattle&page=1&include_adult=false';
+  let moviesURL = 'https://api.themoviedb.org/3/search/movie';
+  let moviesQueryParams = {
+    api_key: process.env.MOVIE_API_KEY,
+    query: search_query,
+    language: 'en-US',
+    page: '1',
+    include_adult: 'false'
+  };
+  //START-CONSOLE-TESTING
+  // console.log('moviesQueryParams:');
+  // console.log(moviesQueryParams);
+  //END-CONSOLE-TESTING
+  superagent.get(moviesURL)
+    .query(moviesQueryParams)
+    .then(movieDataFromAPI => {
+      //START-CONSOLE-TESTING
+      console.log('movieDataFromAPI.body.results:');
+      console.log(movieDataFromAPI.body.results);
+      //END-CONSOLE-TESTING
+      let movieObjectsFromAPIData = movieDataFromAPI.body.results.map(oneMovie => {
+        return new Movie(search_query, oneMovie);
+      });
+      //START-CONSOLE-TESTING
+      console.log('movieObjectsFromAPIData:');
+      console.log(movieObjectsFromAPIData);
+      //END-CONSOLE-TESTING
+      response.status(200).send(movieObjectsFromAPIData);
+    })
+    .catch(error => {
+      console.log('Error:', error);
+      response.status(500).send('Error getting API movie data.');
+    });
 }
 
 //constructors
@@ -171,4 +253,15 @@ function TrailOrCampground(searchQuery, object) {
   //of the format 'YYYY-MM-DD HH-MM-SS'
   this.condition_date = object.conditionDate.split(' ')[0];
   this.condition_time = object.conditionDate.split(' ')[1];
+}
+
+function Movie(searchQuery, object) {
+  this.search_query = searchQuery;
+  this.title = object.title;
+  this.overview = object.overview;
+  this.average_votes = object.vote_average;
+  this.total_votes = object.vote_count;
+  this.image_url = object.poster_path;
+  this.popularity = object.popularity;
+  this.released_on = object.release_date;
 }
