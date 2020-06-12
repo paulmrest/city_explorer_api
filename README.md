@@ -178,3 +178,27 @@ Start time: _____
 Finish time: _____
 
 Actual time needed to complete: _____
+
+### Lab - 09
+
+Number and name of feature: Feature 01 - Movies
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 3:10 PM PDT
+
+Finish time: _____
+
+Actual time needed to complete: _____
+
+***
+
+Number and name of feature: ________________________________
+
+Estimate of time needed to complete: _____
+
+Start time: _____
+
+Finish time: _____
+
+Actual time needed to complete: _____
