@@ -31,6 +31,22 @@ attempting to access an API path that doesn't exist.
 
 ## Time Estimates and Actuals
 
+### Template
+
+***
+
+Number and name of feature: ________________________________
+
+Estimate of time needed to complete: _____
+
+Start time: _____
+
+Finish time: _____
+
+Actual time needed to complete: _____
+
+***
+
 ### Lab-06
 
 ![Lab 06 - Whiteboard](images/Lab06-Whiteboard.jpeg)
@@ -181,6 +197,8 @@ Actual time needed to complete: _____
 
 ### Lab - 09
 
+![Lab 09 - Whiteboard](images/Lab09-Whiteboard.jpeg)
+
 Number and name of feature: Feature 01 - Movies
 
 Estimate of time needed to complete: 1 hour
@@ -205,12 +223,12 @@ Actual time needed to complete: 1 hour 31 minutes - figuring out the Yelp OAuth 
 
 ***
 
-Number and name of feature: ________________________________
+Number and name of feature: Feature 03 - Yelp Pagination
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: 1 hour
 
-Start time: _____
+Start time: 7:30 PM PDT
 
-Finish time: _____
+Finish time: 8:00 PM PDT
 
-Actual time needed to complete: _____
+Actual time needed to complete: 30 minutes
