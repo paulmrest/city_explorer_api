@@ -261,7 +261,7 @@ function Movie(searchQuery, object) {
   this.overview = object.overview;
   this.average_votes = object.vote_average;
   this.total_votes = object.vote_count;
-  this.image_url = object.poster_path;
+  this.image_url = `https://image.tmdb.org/t/p/w500${object.poster_path}`;
   this.popularity = object.popularity;
   this.released_on = object.release_date;
 }
