@@ -17,49 +17,27 @@ const PORT = process.env.PORT || 3001;
 
 //API paths
 app.get('/location', (request, response) => {
-  //START-CONSOLE-TESTING
-  console.log('API get /location:');
-  console.log(request.query);
-  //END-CONSOLE-TESTING
   getLocationData(request, response);
 })
 
 app.get('/weather', (request, response) => {
-  //START-CONSOLE-TESTING
-  console.log('API get /weather');
-  console.log(request.query);
-  //END-CONSOLE-TESTING
   getWeatherData(request, response);
 })
 
 app.get('/trails', (request, response) => {
-  //START-CONSOLE-TESTING
-  console.log('API get /trails');
-  console.log(request.query);
-  //END-CONSOLE-TESTING
   getTrailAndCampgroundData(request, response);
 })
 
 app.get('/movies', (request, response) => {
-  //START-CONSOLE-TESTING
-  console.log('API get /movies');
-  console.log(request.query);
-  //END-CONSOLE-TESTING
   getMovieData(request, response);
 })
 
-
 app.get('/yelp', (request, response) => {
-  //START-CONSOLE-TESTING
-  console.log('API get /yelp');
-  console.log(request.query);
-  //END-CONSOLE-TESTING
   getYelpData(request, response);
 })
 
-//error handling
 app.get('*', (request, response) => {
-  response.status(404).send('Unknown API call.');
+  invalidAPIPathError(response);
 })
 
 //turn on server
@@ -70,7 +48,7 @@ client.connect()
     })
   })
 
-//location getting and setting in DB
+//get location data
 const getLocationData = (request, response) => {
   const search_query = request.query.city;
   //SQL query and safe values for sanitization using pg library
@@ -96,6 +74,7 @@ const getLocationData = (request, response) => {
     });
 }
 
+//get location data from LocationIQ's API and write to the DB
 const fetchDataFromAPI = (search_query, response) => {
   let locationURL = 'https://us1.locationiq.com/v1/search.php';
   const locationAPIQueryParms = {
@@ -107,19 +86,11 @@ const fetchDataFromAPI = (search_query, response) => {
   superagent.get(locationURL)
     .query(locationAPIQueryParms)
     .then(locationWebResults => {
-      //START-CONSOLE-TESTING
-      // console.log('locationWebResults.body[0]:');
-      // console.log(locationWebResults.body[0]);
-      //END-CONSOLE-TESTING
       const locationObjectFromAPI = new Location(search_query, locationWebResults.body[0]);
       const sqlInsertQuery = 'INSERT INTO locations (search_query, display_name, lat, lon) VALUES ($1, $2, $3, $4)';
       const safeInsertValues = [locationObjectFromAPI.search_query, locationObjectFromAPI.formatted_query, locationObjectFromAPI.latitude, locationObjectFromAPI.longitude];
       client.query(sqlInsertQuery, safeInsertValues)
         .then(() => {
-          //START-CONSOLE-TESTING
-          // console.log('location object from API:');
-          // console.log(locationObjectFromAPI);
-          //END-CONSOLE-TESTING
           response.status(200).send(locationObjectFromAPI);
         })
     })
@@ -131,16 +102,10 @@ const fetchDataFromAPI = (search_query, response) => {
 
 const handleDataFromCache = (search_query, cacheData, response) => {
   const locationObjectFromCache = new Location(cacheData.search_query, cacheData);
-  //START-CONSOLE-TESTING
-  // console.log('cacheData:');
-  // console.log(cacheData);
-  // console.log('locationObjectFromCache:');
-  // console.log(locationObjectFromCache);
-  //END-CONSOLE-TESTING
   response.status(200).send(locationObjectFromCache);
 }
 
-//weather getting
+//get weather data from WeatherBit's API
 const getWeatherData = (request, response) => {
   //API URL and query object
   let weatherURL = 'https://api.weatherbit.io/v2.0/forecast/daily';
@@ -164,7 +129,7 @@ const getWeatherData = (request, response) => {
     });
 }
 
-//trail and campground getting
+//get trail and campground data from Hiking Project's API
 const getTrailAndCampgroundData = (request, response) => {
   //trail and campground API URL and query object
   let trailsURL = 'https://www.hikingproject.com/data/get-trails';
@@ -188,18 +153,10 @@ const getTrailAndCampgroundData = (request, response) => {
     });
 }
 
-//get movie data
+//get movie data from The Movie Database's API
 const getMovieData = (request, response) => {
+  //setup URL
   const search_query = request.query.search_query;
-  //START-CONSOLE-TESTING
-  // console.log('getMovieData');
-  // console.log('request.query:');
-  // console.log(request.query);
-  // console.log('request.query.search_query:');
-  // console.log(request.query.search_query);
-  //END-CONSOLE-TESTING
-
-  // let moviesURL = 'https://api.themoviedb.org/3/search/movie?api_key=ea13133c930fcaaf870867acf38f063f&language=en-US&query=seattle&page=1&include_adult=false';
   let moviesURL = 'https://api.themoviedb.org/3/search/movie';
   let moviesQueryParams = {
     api_key: process.env.MOVIE_API_KEY,
@@ -208,24 +165,13 @@ const getMovieData = (request, response) => {
     page: '1',
     include_adult: 'false'
   };
-  //START-CONSOLE-TESTING
-  // console.log('moviesQueryParams:');
-  // console.log(moviesQueryParams);
-  //END-CONSOLE-TESTING
+  //get data from API using SuperAgent
   superagent.get(moviesURL)
     .query(moviesQueryParams)
     .then(movieDataFromAPI => {
-      //START-CONSOLE-TESTING
-      // console.log('movieDataFromAPI.body.results:');
-      // console.log(movieDataFromAPI.body.results);
-      //END-CONSOLE-TESTING
       let movieObjectsFromAPIData = movieDataFromAPI.body.results.map(oneMovie => {
         return new Movie(oneMovie);
       });
-      //START-CONSOLE-TESTING
-      // console.log('movieObjectsFromAPIData:');
-      // console.log(movieObjectsFromAPIData);
-      //END-CONSOLE-TESTING
       response.status(200).send(movieObjectsFromAPIData);
     })
     .catch(error => {
@@ -234,21 +180,26 @@ const getMovieData = (request, response) => {
     });
 }
 
+//get Yelp data from their Fusion API
 const getYelpData = (request, response) => {
+  //allow for pagination from front-end
+  const numPerPage = 10;
+  const currPage = request.query.page;
+  const currOffset = (currPage - 1) * numPerPage;
+  //setup URL
   const yelpURL = 'https://api.yelp.com/v3/businesses/search';
   const yelpQueryParams = {
     latitude: request.query.latitude,
     longitude: request.query.longitude,
-    categories: 'Restaurants (restaurants, All)'
+    categories: 'Restaurants (restaurants, All)',
+    offset: currOffset,
+    limit: currOffset + numPerPage
   };
+  //get data from API using SuperAgent
   superagent.get(yelpURL)
     .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
     .query(yelpQueryParams)
     .then(yelpDataFromAPI => {
-      //START-CONSOLE-TESTING
-      // console.log('yelpDataFromAPI.body:');
-      // console.log(yelpDataFromAPI.body.businesses);
-      //END-CONSOLE-TESTING
       let yelpObjectsFromAPIData = yelpDataFromAPI.body.businesses.map(oneBusiness => {
         return new YelpBusiness(oneBusiness);
       });
@@ -258,6 +209,10 @@ const getYelpData = (request, response) => {
       console.log('Error:', error);
       response.status(500).send('Error getting Yelp data.');
     });
+}
+
+const invalidAPIPathError = response => {
+  response.status(404).send('Invalid API path.');
 }
 
 //constructors
