@@ -48,6 +48,15 @@ app.get('/movies', (request, response) => {
   getMovieData(request, response);
 })
 
+
+app.get('/yelp', (request, response) => {
+  //START-CONSOLE-TESTING
+  console.log('API get /yelp');
+  console.log(request.query);
+  //END-CONSOLE-TESTING
+  getYelpData(request, response);
+})
+
 //error handling
 app.get('*', (request, response) => {
   response.status(404).send('Unknown API call.');
@@ -99,8 +108,8 @@ const fetchDataFromAPI = (search_query, response) => {
     .query(locationAPIQueryParms)
     .then(locationWebResults => {
       //START-CONSOLE-TESTING
-      console.log('locationWebResults.body[0]:');
-      console.log(locationWebResults.body[0]);
+      // console.log('locationWebResults.body[0]:');
+      // console.log(locationWebResults.body[0]);
       //END-CONSOLE-TESTING
       const locationObjectFromAPI = new Location(search_query, locationWebResults.body[0]);
       const sqlInsertQuery = 'INSERT INTO locations (search_query, display_name, lat, lon) VALUES ($1, $2, $3, $4)';
@@ -108,8 +117,8 @@ const fetchDataFromAPI = (search_query, response) => {
       client.query(sqlInsertQuery, safeInsertValues)
         .then(() => {
           //START-CONSOLE-TESTING
-          console.log('location object from API:');
-          console.log(locationObjectFromAPI);
+          // console.log('location object from API:');
+          // console.log(locationObjectFromAPI);
           //END-CONSOLE-TESTING
           response.status(200).send(locationObjectFromAPI);
         })
@@ -123,10 +132,10 @@ const fetchDataFromAPI = (search_query, response) => {
 const handleDataFromCache = (search_query, cacheData, response) => {
   const locationObjectFromCache = new Location(cacheData.search_query, cacheData);
   //START-CONSOLE-TESTING
-  console.log('cacheData:');
-  console.log(cacheData);
-  console.log('locationObjectFromCache:');
-  console.log(locationObjectFromCache);
+  // console.log('cacheData:');
+  // console.log(cacheData);
+  // console.log('locationObjectFromCache:');
+  // console.log(locationObjectFromCache);
   //END-CONSOLE-TESTING
   response.status(200).send(locationObjectFromCache);
 }
@@ -145,7 +154,7 @@ const getWeatherData = (request, response) => {
     .query(weatherAPIQueryParams)
     .then(locationWeatherResults => {
       let locationWeatherFromQuery = locationWeatherResults.body.data.map(oneWeatherDay => {
-        return new WeatherDay(request.query.search_query, oneWeatherDay);
+        return new WeatherDay(oneWeatherDay);
       });
       response.status(200).send(locationWeatherFromQuery);
     })
@@ -169,7 +178,7 @@ const getTrailAndCampgroundData = (request, response) => {
     .query(trailAndCampgroundQueryParams)
     .then(locationTrailsResults => {
       let locationTrailsFromQuery = locationTrailsResults.body.trails.map(oneTrailOrCampground => {
-        return new TrailOrCampground(request.query.search_query, oneTrailOrCampground);
+        return new TrailOrCampground(oneTrailOrCampground);
       });
       response.status(200).send(locationTrailsFromQuery);
     })
@@ -207,21 +216,47 @@ const getMovieData = (request, response) => {
     .query(moviesQueryParams)
     .then(movieDataFromAPI => {
       //START-CONSOLE-TESTING
-      console.log('movieDataFromAPI.body.results:');
-      console.log(movieDataFromAPI.body.results);
+      // console.log('movieDataFromAPI.body.results:');
+      // console.log(movieDataFromAPI.body.results);
       //END-CONSOLE-TESTING
       let movieObjectsFromAPIData = movieDataFromAPI.body.results.map(oneMovie => {
-        return new Movie(search_query, oneMovie);
+        return new Movie(oneMovie);
       });
       //START-CONSOLE-TESTING
-      console.log('movieObjectsFromAPIData:');
-      console.log(movieObjectsFromAPIData);
+      // console.log('movieObjectsFromAPIData:');
+      // console.log(movieObjectsFromAPIData);
       //END-CONSOLE-TESTING
       response.status(200).send(movieObjectsFromAPIData);
     })
     .catch(error => {
       console.log('Error:', error);
       response.status(500).send('Error getting API movie data.');
+    });
+}
+
+const getYelpData = (request, response) => {
+  const yelpURL = 'https://api.yelp.com/v3/businesses/search';
+  const yelpQueryParams = {
+    latitude: request.query.latitude,
+    longitude: request.query.longitude,
+    categories: 'Restaurants (restaurants, All)'
+  };
+  superagent.get(yelpURL)
+    .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
+    .query(yelpQueryParams)
+    .then(yelpDataFromAPI => {
+      //START-CONSOLE-TESTING
+      // console.log('yelpDataFromAPI.body:');
+      // console.log(yelpDataFromAPI.body.businesses);
+      //END-CONSOLE-TESTING
+      let yelpObjectsFromAPIData = yelpDataFromAPI.body.businesses.map(oneBusiness => {
+        return new YelpBusiness(oneBusiness);
+      });
+      response.status(200).send(yelpObjectsFromAPIData);
+    })
+    .catch(error => {
+      console.log('Error:', error);
+      response.status(500).send('Error getting Yelp data.');
     });
 }
 
@@ -233,14 +268,12 @@ function Location(searchQuery, object) {
   this.longitude = object.lon;
 }
 
-function WeatherDay(searchQuery, object) {
-  this.search_query = searchQuery;
+function WeatherDay(object) {
   this.forecast = object.weather.description;
   this.time = object.datetime;
 }
 
-function TrailOrCampground(searchQuery, object) {
-  this.search_query = searchQuery;
+function TrailOrCampground(object) {
   this.name = object.name;
   this.location = object.location;
   this.length = object.length;
@@ -255,8 +288,7 @@ function TrailOrCampground(searchQuery, object) {
   this.condition_time = object.conditionDate.split(' ')[1];
 }
 
-function Movie(searchQuery, object) {
-  this.search_query = searchQuery;
+function Movie(object) {
   this.title = object.title;
   this.overview = object.overview;
   this.average_votes = object.vote_average;
@@ -264,4 +296,12 @@ function Movie(searchQuery, object) {
   this.image_url = `https://image.tmdb.org/t/p/w500${object.poster_path}`;
   this.popularity = object.popularity;
   this.released_on = object.release_date;
+}
+
+function YelpBusiness(object) {
+  this.name = object.name;
+  this.image_url = object.image_url;
+  this.price = object.price;
+  this.rating = object.rating;
+  this.url = object.url;
 }

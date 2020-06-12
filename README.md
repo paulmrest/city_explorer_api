@@ -187,9 +187,21 @@ Estimate of time needed to complete: 1 hour
 
 Start time: 3:10 PM PDT
 
-Finish time: _____
+Finish time: 5:45 PM PDT
 
-Actual time needed to complete: _____
+Actual time needed to complete: 2 hours 35 minutes - spent a little time helping others, but a lot of this was just me banging my head against a dumb error.
+
+***
+
+Number and name of feature: Feature 02 - Yelp
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 5:53 PM PDT
+
+Finish time: 7:22 PM PDT
+
+Actual time needed to complete: 1 hour 31 minutes - figuring out the Yelp OAuth took a while
 
 ***
 
