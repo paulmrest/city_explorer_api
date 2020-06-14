@@ -1,6 +1,6 @@
-drop table if exists locations;
+DROP TABLE IF EXISTS locations;
 
-create table locations (
+CREATE TABLE locations (
   "id" SERIAL PRIMARY KEY,
   "search_query" VARCHAR(255),
   "display_name" VARCHAR(255),

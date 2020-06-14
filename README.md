@@ -183,18 +183,6 @@ Finish time: 7:38 PM PDT
 
 Actual time needed to complete: 18 minutes
 
-***
-
-Number and name of feature: ________________________________
-
-Estimate of time needed to complete: _____
-
-Start time: _____
-
-Finish time: _____
-
-Actual time needed to complete: _____
-
 ### Lab - 09
 
 ![Lab 09 - Whiteboard](images/Lab09-Whiteboard.jpeg)
